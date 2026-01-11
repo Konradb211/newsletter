@@ -34,6 +34,10 @@ session_start();
                         echo "<p>To nie jest poprawny adres!</p>";
                         unset($_SESSION['given_email']);
                     }
+                    if (isset($_SESSION['mail_error'])) {
+                        echo "<p class='mail-error'>".$_SESSION['mail_error']."</p>";
+                        unset($_SESSION['mail_error']);
+                    }
                 ?>
             </div>
             <button type="submit">Wyślij</button>

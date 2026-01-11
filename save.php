@@ -1,6 +1,13 @@
 <?php
-
 session_start();
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
+
+require 'PHPMailer/src/Exception.php';
+require 'PHPMailer/src/PHPMailer.php';
+require 'PHPMailer/src/SMTP.php';
 
 if (isset($_POST['email'])) {
     $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
@@ -11,9 +18,63 @@ if (isset($_POST['email'])) {
         header('Location: index.php');
         exit();
     } else {
-        echo $email;
-    }
+        require_once "database.php";
 
+        $check = $conn->prepare("SELECT id FROM users WHERE email = :email");
+        $check->execute(['email' => $email]);
+
+        if ($check->fetch()) {
+            $_SESSION['mail_error'] = 'Ten adres e-mail jest już zapisany do newslettera';
+            header('Location: index.php');
+            exit();
+        }
+
+        $query = $conn->prepare("INSERT INTO users VALUES  (NULL, :email)" );
+        $query->bindValue(':email', $email, PDO::PARAM_STR);
+        $query->execute();
+
+        try {
+            $mail = new PHPMailer();
+            $mail->isSMTP();
+            //$mail->SMTPDebug = SMTP::DEBUG_SERVER;
+
+            $mail->Host = 'smtp.gmail.com';
+            $mail->Port = '465';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            $mail->SMTPAuth = true;
+
+            $mail->Username = '';
+            $mail->Password = '';
+
+            $mail->CharSet = 'UTF-8';
+            $mail->setFrom('no-reply@gmail.com', 'Dzień dobry to jest mój newsletter');
+            $mail->addAddress($email);
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Kapibary to świetne pływaki a kicie są najlepsze';
+
+            $mail->Body = '
+            <html lang="pl">
+            <head>
+                <title>Tak to jest newsletter o kapibarach i kiciach</title>
+            </head>
+            <body>
+                <h1>Dzień dobry!</h1>
+                <p>Zobacz to: <a href="https://www.youtube.com/watch?v=Gp6dewwTsWQ">Kapibara</a></p>
+                <hr>
+                <p>Administratorem twoich danych osobowych jest:</p>
+                <p>Kapikiciacziczi Sp.z.o_O, ul Wiejska 1, 63-524 Czajków</p>
+            </body>
+            </html>
+            ';
+
+            $mail->addAttachment('img/kot.jpg');
+            $mail->send();
+
+        } catch (Exception $e) {
+            echo "Błąd wysyłania maila: {$mail->ErrorInfo}";
+        }
+    }
 } else {
     header("Location: index.php");
     exit();

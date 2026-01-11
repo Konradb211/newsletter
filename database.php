@@ -1,6 +1,5 @@
 <?php
 $config = require_once 'config.php';
-var_dump($config);
 
 try {
     $conn = new PDO("mysql:host={$config['host']}; dbname={$config['db']}; charset=utf8", $config['user'], $config['password'], [
