@@ -1,0 +1,38 @@
+body {
+    background-color: #333;
+    color: white !important;
+}
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+}
+.container-main {
+    display: flex;
+    flex-direction: column;
+}
+.container-main-form{
+    display: flex;
+    flex-direction: column;
+}
+
+.container-main form label {
+    padding-bottom: 5px;
+}
+
+.container-main form input {
+    padding: 5px;
+}
+
+.container-main form button {
+    margin-top: 10px;
+    padding: 5px 15px;
+    background-color: transparent;
+    border: 1px solid white;
+    border-radius: 5px;
+    color: white;
+    text-transform: uppercase;
+    width: 100%;
+}
