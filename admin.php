@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+if (isset($_SESSION['logged_in'])) {
+    header('Location: list.php');
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -24,9 +33,17 @@
     <main>
         <article>
             <form method="post" action="list.php">
-                <label>Login <input type="text" name="login"></label>
-                <label>Hasło <input type="password" name="pass"></label>
-                <input type="submit" value="Zaloguj się!">
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <label>Login </br><input type="text" name="login"></label>
+                    <label>Hasło </br><input type="password" name="pass"></label>
+                </div>
+                        <?php
+                            if(isset($_SESSION['bad_attempt'])) {
+                                echo '<p>Niepoprawny login lub hasło!</p>';
+                                unset($_SESSION['bad_attempt']);
+                            }
+                        ?>
+                <input class="input-admin" type="submit" value="Zaloguj się!">
             </form>
         </article>
     </main>

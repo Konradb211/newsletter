@@ -26,6 +26,7 @@ body {
     padding: 5px;
 }
 
+.input-admin,
 .container-main form button {
     margin-top: 10px;
     padding: 5px 15px;
@@ -38,4 +39,20 @@ body {
 }
 .mail-error {
     padding-top: 5px;
+}
+
+.all_users {
+    display: flex;
+    flex-direction: column;
+    a{
+        color: white;
+        text-decoration: none;
+        padding: 5px;
+    }
+}
+
+.logout {
+    color: white;
+    text-decoration: none;
+    padding: 5px;
 }
